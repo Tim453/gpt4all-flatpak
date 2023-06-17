@@ -48,11 +48,10 @@ modules:
       - cmake  -S ./gpt4all-chat -B build -DCMAKE_INSTALL_PREFIX=/app
       - cmake --build build --config Release -- -j
       - cmake --install build --prefix "/app"
-      - ls
     sources:
       - type: git
         url: https://github.com/nomic-ai/gpt4all
-        branch: main
+        commit: 797891c995cb1e296cc135a029bb0bb9381aeb0d
 
   - name: gpt4all-metadata
     buildsystem: simple
