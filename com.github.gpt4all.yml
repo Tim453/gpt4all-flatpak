@@ -51,7 +51,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/nomic-ai/gpt4all
-        commit: 797891c995cb1e296cc135a029bb0bb9381aeb0d
+        commit: 19412cfa5d86da1cd4c97bd6aaf6f7b221900082
 
   - name: gpt4all-metadata
     buildsystem: simple
