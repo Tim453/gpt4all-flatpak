@@ -14,7 +14,6 @@ finish-args:
 command: chat
 cleanup:
   - /include
-  - 
 
 modules:
   - name: qthttpserver
@@ -51,7 +50,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/nomic-ai/gpt4all
-        commit: 19412cfa5d86da1cd4c97bd6aaf6f7b221900082
+        commit: 392ded90157b3ed983032fc1d6e7a51e51e44f7f
 
   - name: gpt4all-metadata
     buildsystem: simple
