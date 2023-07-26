@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop">
-    <id>com.github.gpt4all</id>
+    <id>io.gpt4all.gpt4all</id>
     <metadata_license>CC0-1.0</metadata_license>
     <project_license>MIT License</project_license>
     <name>GPT4ALL</name>
@@ -20,7 +20,7 @@
         </ol>
     </description>
 
-    <launchable type="desktop-id">com.github.gpt4all.desktop</launchable>
+    <launchable type="desktop-id">io.gpt4all.gpt4all.desktop</launchable>
 <content_rating type="oars-1.0">
     <content_attribute id="language-profanity">mild</content_attribute>
     <content_attribute id="language-humor">moderate</content_attribute>
