@@ -47,24 +47,16 @@ modules:
       - cmake  -S ./gpt4all-chat -B build -DCMAKE_INSTALL_PREFIX=/app
       - cmake --build build --config Release -- -j
       - cmake --install build --prefix "/app"
-    sources:
-      - type: git
-        url: https://github.com/nomic-ai/gpt4all
-        commit: 27a8b020c36b0df8f8b82a252d261cda47cf44b8
-
-  - name: gpt4all-metadata
-    buildsystem: simple
-    build-commands:
-      - install -Dm644 logo.svg
+      - install -Dm644 gpt4all-chat/icons/logo.svg
         /app/share/icons/hicolor/scalable/apps/io.gpt4all.gpt4all.svg
       - install -Dm644 io.gpt4all.gpt4all.desktop
         /app/share/applications/io.gpt4all.gpt4all.desktop
       - install -Dm644 io.gpt4all.gpt4all.appdata.xml
         /app/share/appdata/io.gpt4all.gpt4all.appdata.xml
     sources:
-      - type: file
-        url: https://raw.githubusercontent.com/nomic-ai/gpt4all/main/gpt4all-chat/icons/logo.svg
-        sha256: 4c4e8476d0e2020585b69c6e2fc9e7d0cb12cbb36aa7b83c3a2e48ed4a9a424c
+      - type: git
+        url: https://github.com/nomic-ai/gpt4all
+        commit: 27a8b020c36b0df8f8b82a252d261cda47cf44b8
       - type: file
         path: io.gpt4all.gpt4all.desktop
       - type: file
