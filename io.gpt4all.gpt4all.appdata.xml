@@ -19,7 +19,20 @@
             <li>Copy your conversation to clipboard</li>
         </ol>
     </description>
-
+    <screenshots>
+        <screenshot type="default">
+            <image>https://raw.githubusercontent.com/Tim453/gpt4all-flatpak/main/images/screenshot1.png</image>
+        </screenshot>
+        <screenshot>
+            <image>https://raw.githubusercontent.com/Tim453/gpt4all-flatpak/main/images/screenshot2.png</image>
+        </screenshot>
+        <screenshot>
+            <image>https://raw.githubusercontent.com/Tim453/gpt4all-flatpak/main/images/screenshot3.png</image>
+        </screenshot>
+        <screenshot>
+            <image>https://raw.githubusercontent.com/Tim453/gpt4all-flatpak/main/images/screenshot4.png</image>
+        </screenshot>
+    </screenshots>
     <launchable type="desktop-id">io.gpt4all.gpt4all.desktop</launchable>
 <content_rating type="oars-1.0">
     <content_attribute id="language-profanity">mild</content_attribute>
