@@ -51,11 +51,6 @@ modules:
     cleanup:
     - '*'
   
-
-
-
-
-
   - name: vulkan-tools
     buildsystem: cmake
     disabled: false
