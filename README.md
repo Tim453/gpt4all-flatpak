@@ -5,9 +5,9 @@ This repo contains a manifest to build a gpt4all flatpak
 ### Dependencies
 To build the flatpak the following SDKs/Runtimes need to be installed:
 ```
-flatpak install org.freedesktop.Sdk.Extension.node14//22.08
-flatpak install org.kde.Platform//6.5
-flatpak install org.kde.Sdk//6.5
+flatpak install flathub com.riverbankcomputing.PyQt.BaseApp//6.5
+flatpak install flathub org.kde.Platform//6.5
+flatpak install flathub org.kde.Sdk//6.5
 ```
 
 
