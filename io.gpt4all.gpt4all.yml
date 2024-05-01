@@ -1,14 +1,11 @@
 app-id: io.gpt4all.gpt4all
-default-branch: stable
 runtime: org.kde.Platform
-runtime-version: '6.5'
+runtime-version: '6.6'
 sdk: org.kde.Sdk
-base: com.riverbankcomputing.PyQt.BaseApp
-base-version: '6.5'
+base: io.qt.qtwebengine.BaseApp
+base-version: '6.6'
 cleanup-commands:
   - /app/cleanup-BaseApp.sh
-modules:
-  - name: PyQtWebEngineApp
 finish-args:
   - --share=ipc
   - --socket=wayland
@@ -23,11 +20,11 @@ cleanup:
 
 modules:
   - name: qthttpserver
-    buildsystem: cmake
+    buildsystem: cmake-ninja
     sources:
       - type: archive
-        url: https://invent.kde.org/qt/qt/qthttpserver/-/archive/v6.5.3/qthttpserver-v6.5.3.zip
-        sha256: 6536d7388adf14b91ae977e70f65ce40ae96d14e4860770ca8384e1e4621c980
+        url: https://invent.kde.org/qt/qt/qthttpserver/-/archive/v6.6.3/qthttpserver-v6.6.3.zip
+        sha256: 074159fdee37dad876159c52ec69707e93115af7e383ddd93bf5817e957d00aa
 
   - name: python-html5lib
     buildsystem: simple
@@ -52,8 +49,7 @@ modules:
     - '*'
   
   - name: vulkan-tools
-    buildsystem: cmake
-    disabled: false
+    buildsystem: cmake-ninja
     builddir: true
     sources:
       - type: archive
@@ -104,16 +100,14 @@ modules:
             commit: d1517d64cfca91f573af1bf7341dc3a5113349c0
             dest: third_party/glslang   
       - name: vulkan-headers
-        buildsystem: cmake
-        disabled: false
+        buildsystem: cmake-ninja
         builddir: true
         sources:
           - type: archive
             url: https://github.com/KhronosGroup/Vulkan-Headers/archive/refs/tags/v1.3.275.zip
             sha256: 2f8b6544e80ee083e11dabda6b2474b7ff758584107dba8468903d454a04ef2e        
       - name: volk
-        buildsystem: cmake
-        disabled: false
+        buildsystem: cmake-ninja
         builddir: true
         config-opts:
           - -DVOLK_INSTALL=ON
@@ -123,8 +117,7 @@ modules:
             sha256: b22929065930d6b7f2a3192fb9937ed2f9f3168c8f0c1a4482f051d582fdb363        
 
   - name: fmt
-    buildsystem: cmake
-    disabled: false
+    buildsystem: cmake-ninja
     builddir: true
     sources:
       - type: archive
@@ -132,24 +125,17 @@ modules:
         sha256: 312151a2d13c8327f5c9c586ac6cf7cddc1658e8f53edae0ec56509c8fa516c9
 
   - name: gpt4all
-    buildsystem: simple
-    build-commands:
-      - git submodule update --init --recursive
-      - mkdir build
-      - cmake  -S ./gpt4all-chat -B build -DKOMPUTE_OPT_USE_BUILT_IN_VULKAN_HEADER=OFF -DKOMPUTE_OPT_USE_BUILT_IN_FMT=OFF -DCMAKE_INSTALL_PREFIX=/app
-      - cmake --build build --config Release -- -j
-      - cmake --install build --prefix "/app"
-      - install -Dm644 logo.svg /app/share/icons/hicolor/scalable/apps/io.gpt4all.gpt4all.svg
-      - install -Dm644 io.gpt4all.gpt4all.desktop /app/share/applications/io.gpt4all.gpt4all.desktop
-      - install -Dm644 io.gpt4all.gpt4all.appdata.xml  /app/share/appdata/io.gpt4all.gpt4all.appdata.xml
+    subdir: gpt4all-chat
+    config-opts:
+      - -DKOMPUTE_OPT_USE_BUILT_IN_VULKAN_HEADER=OFF
+      - -DKOMPUTE_OPT_USE_BUILT_IN_FMT=OFF
+    buildsystem: cmake-ninja
+    post-install:
+      - install -Dm644 icons/logo.svg /app/share/icons/hicolor/scalable/apps/io.gpt4all.gpt4all.svg
+      - install -Dm644 flatpak-manifest/io.gpt4all.gpt4all.desktop /app/share/applications/io.gpt4all.gpt4all.desktop
+      - install -Dm644 flatpak-manifest/io.gpt4all.gpt4all.appdata.xml /app/share/appdata/io.gpt4all.gpt4all.appdata.xml
     sources:
       - type: git
         url: https://github.com/nomic-ai/gpt4all.git
-        tag: v2.7.3
-      - type: file
-        url: https://raw.githubusercontent.com/nomic-ai/gpt4all/main/gpt4all-chat/icons/logo.svg
-        sha256: 4c4e8476d0e2020585b69c6e2fc9e7d0cb12cbb36aa7b83c3a2e48ed4a9a424c
-      - type: file
-        path: io.gpt4all.gpt4all.desktop
-      - type: file
-        path: io.gpt4all.gpt4all.appdata.xml
+        tag: v2.7.4
+        commit: 4f3c9bbe3ebb405f8f6ffc2ac691547f0f6f062d
