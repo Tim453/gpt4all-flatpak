@@ -9,7 +9,7 @@ cleanup-commands:
 finish-args:
   - --share=ipc
   - --socket=wayland
-  - --socket=x11
+  - --socket=fallback-x11
   - --share=network
   - --device=dri
   - --env=LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/app/lib/x86_64-linux-gnu/
@@ -17,6 +17,7 @@ finish-args:
 command: chat
 cleanup:
   - /include
+  - /lib/*.a
 
 modules:
   - name: qthttpserver
@@ -48,73 +49,65 @@ modules:
     cleanup:
     - '*'
   
+  - name: volk
+    buildsystem: cmake-ninja
+    builddir: true
+    config-opts:
+    - -DVOLK_INSTALL=ON
+    sources:
+    - type: archive
+      url: https://github.com/zeux/volk/archive/refs/tags/vulkan-sdk-1.3.280.0.zip
+      sha256: 178875134d36e8b90f7e3ec31171355df3b71f47eba49cca2f98158e6552b011
+
+  - name: vulkan-headers
+    buildsystem: cmake-ninja
+    builddir: true
+    sources:
+    - type: archive
+      url: https://github.com/KhronosGroup/Vulkan-Headers/archive/refs/tags/v1.3.283.zip
+      sha256: 2094159c87fb4b6d8f734bd4cad59564cef7ef32feb00cf6d8ca7e75a84df921   
+
   - name: vulkan-tools
     buildsystem: cmake-ninja
     builddir: true
     sources:
-      - type: archive
-        url: https://github.com/KhronosGroup/Vulkan-Tools/archive/refs/tags/v1.3.275.zip
-        sha256: 6476a00beb93c8248db27fb39014d8d2da05203950ad0be1a41db9f0dd4ae7c4
-    modules:
-      - name: shaderc
-        buildsystem: cmake-ninja
-        builddir: true
-        config-opts:
-          - -DSHADERC_SKIP_COPYRIGHT_CHECK=ON
-          - -DSHADERC_SKIP_EXAMPLES=ON
-          - -DSHADERC_SKIP_TESTS=ON
-          - -DSPIRV_SKIP_EXECUTABLES=ON
-          - -DENABLE_GLSLANG_BINARIES=OFF
-        cleanup:
-          - /bin
-          - /include
-          - /lib/cmake
-          - /lib/pkgconfig
-        sources:
-          - type: git
-            url: https://github.com/google/shaderc.git
-            tag: v2023.8
-            #commit: 45b735dfddefe26a99b77e5a74e30d860713ac64
-#           x-checker-data:
-#             type: git
-#             tag-pattern: ^v(\d{4}\.\d{1,2})$
-          - type: git
-            url: https://github.com/KhronosGroup/SPIRV-Tools.git
-            tag: v2023.2
-            commit: 44d72a9b36702f093dd20815561a56778b2d181e
-            dest: third_party/spirv-tools
-            x-checker-data:
-              type: git
-              tag-pattern: ^v(\d{4}\.\d{1})$
-          - type: git
-            url: https://github.com/KhronosGroup/SPIRV-Headers.git
-            tag: sdk-1.3.250.1
-            commit: 268a061764ee69f09a477a695bf6a11ffe311b8d
-            dest: third_party/spirv-headers
-            x-checker-data:
-              type: git
-              tag-pattern: ^sdk-([\d.]+)$
-          - type: git
-            url: https://github.com/KhronosGroup/glslang.git
-            tag: 12.2.0
-            commit: d1517d64cfca91f573af1bf7341dc3a5113349c0
-            dest: third_party/glslang   
-      - name: vulkan-headers
-        buildsystem: cmake-ninja
-        builddir: true
-        sources:
-          - type: archive
-            url: https://github.com/KhronosGroup/Vulkan-Headers/archive/refs/tags/v1.3.275.zip
-            sha256: 2f8b6544e80ee083e11dabda6b2474b7ff758584107dba8468903d454a04ef2e        
-      - name: volk
-        buildsystem: cmake-ninja
-        builddir: true
-        config-opts:
-          - -DVOLK_INSTALL=ON
-        sources:
-          - type: archive
-            url: https://github.com/zeux/volk/archive/refs/tags/vulkan-sdk-1.3.268.0.zip
-            sha256: b22929065930d6b7f2a3192fb9937ed2f9f3168c8f0c1a4482f051d582fdb363        
+    - type: archive
+      url: https://github.com/KhronosGroup/Vulkan-Tools/archive/refs/tags/v1.3.283.zip
+      sha256: 11ec6b474e91dc8cb6e7f22891294ede549bb6ed67c19d230e293b3fc9610883
+
+
+  - name: shaderc
+    buildsystem: cmake-ninja
+    builddir: true
+    config-opts:
+     - -DSHADERC_SKIP_COPYRIGHT_CHECK=ON
+     - -DSHADERC_SKIP_EXAMPLES=ON
+     - -DSHADERC_SKIP_TESTS=ON
+     - -DSPIRV_SKIP_EXECUTABLES=ON
+     - -DENABLE_GLSLANG_BINARIES=OFF
+    cleanup:
+     - /bin
+     - /include
+     - /lib/cmake
+     - /lib/pkgconfig
+    sources:
+    - type: git
+      url: https://github.com/google/shaderc.git
+      tag: v2024.1
+      commit: 47a9387ef5b3600d30d84c71ec77a59dc7db46fa
+      # https://github.com/google/shaderc/blob/known-good/known_good.json
+    - type: git
+      url: https://github.com/KhronosGroup/SPIRV-Tools.git
+      commit: dd4b663e13c07fea4fbb3f70c1c91c86731099f7
+      dest: third_party/spirv-tools
+    - type: git
+      url: https://github.com/KhronosGroup/SPIRV-Headers.git
+      commit: 5e3ad389ee56fca27c9705d093ae5387ce404df4
+      dest: third_party/spirv-headers
+    - type: git
+      url: https://github.com/KhronosGroup/glslang.git
+      commit: 142052fa30f9eca191aa9dcf65359fcaed09eeec
+      dest: third_party/glslang   
 
   - name: fmt
     buildsystem: cmake-ninja
@@ -133,9 +126,11 @@ modules:
     post-install:
       - install -Dm644 icons/logo.svg /app/share/icons/hicolor/scalable/apps/io.gpt4all.gpt4all.svg
       - install -Dm644 flatpak-manifest/io.gpt4all.gpt4all.desktop /app/share/applications/io.gpt4all.gpt4all.desktop
-      - install -Dm644 flatpak-manifest/io.gpt4all.gpt4all.appdata.xml /app/share/appdata/io.gpt4all.gpt4all.appdata.xml
+      - install -Dm644 ../io.gpt4all.gpt4all.appdata.xml /app/share/appdata/io.gpt4all.gpt4all.appdata.xml
     sources:
       - type: git
         url: https://github.com/nomic-ai/gpt4all.git
-        tag: v2.7.4
-        commit: 4f3c9bbe3ebb405f8f6ffc2ac691547f0f6f062d
+        tag: v2.7.5
+        commit: d7c47fb6f7bb101f69e171d606ab4b4941a74cf8
+      - type: file
+        path: io.gpt4all.gpt4all.appdata.xml
